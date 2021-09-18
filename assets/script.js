@@ -2,12 +2,17 @@
 var H1 = document.querySelector("#H1")
 var P = document.querySelector("#P")
 var UL = document.querySelector("#UL")
+var OL = document.querySelector("#OL")
 var H2 = document.querySelector("#H2")
 var timeDiv = document.querySelector("#timeDiv")
 var DisplayTime = document.querySelector("#DisplayTime")
 var BttnStrt = document.createElement("button")
+var Span = document.querySelector("#Span")
+var Form = document.querySelector("#Form")
+var ScoreBttn = document.querySelector("#ScoreBttn")
 
 var timercount = 75
+var AllDone = false
 
 var BttnStrt = document.createElement("button")
 
@@ -17,6 +22,7 @@ var Bttn3 = document.createElement("button")
 var Bttn4 = document.createElement("button")
 
 function DeleteButtons() {
+
     document.remove(Bttn1)
     document.remove(Bttn2)
     document.remove(Bttn3)
@@ -25,6 +31,7 @@ function DeleteButtons() {
 
 // Start Screen
 function StartScreen() {
+
     H1.textContent = "Code Quiz Challenge"
     P.innerHTML = "Try to answer the following code-related questions within the time limit.<br />Keep in mind that incorrect answers will penelize your score/time by ten seconds."
     
@@ -38,7 +45,8 @@ function StartScreen() {
     })
 }
 
-function Quiz(event) {
+function Quiz() {
+
     BttnStrt.parentNode.removeChild(BttnStrt)
     
     timeDiv.setAttribute("style", "visibility: visible;");
@@ -48,7 +56,11 @@ function Quiz(event) {
       timercount--
       DisplayTime.textContent = timercount
       
-      if(timercount === 0) {
+      if(timercount <= 0) {
+        clearInterval(timer);
+        ScoreScreen()
+      }
+      if (AllDone == true) {
         clearInterval(timer);
       }
     } ,1000);
@@ -57,6 +69,7 @@ function Quiz(event) {
 }
 
 function Wrong() {  
+
     H2.textContent = "Wrong!"
     DisplayTime.style.color = "red"
     setTimeout(function () {
@@ -67,6 +80,7 @@ function Wrong() {
 }
 
 function Right() {
+
     H2.textContent = "Right!"
     setTimeout(function () {
         H2.textContent = ""
@@ -104,6 +118,34 @@ function NextQuestion(number) {
     }
 }
 
+function Submit(event) {
+    event.preventDefault();
+
+    var Highscores = JSON.parse(localStorage.getItem("Highscores"));
+
+    if (Highscores === null) {
+        Highscores = []
+    }
+
+    var initials = document.querySelector("#Initials").value;
+    var score = timercount
+
+    var highscore = initials+" - "+score
+    
+
+    Highscores.push(highscore)
+
+    if (initials.length > 3) {
+        alert("Initials must be three letters maax!")
+    }
+    else {
+        localStorage.setItem("Highscores", JSON.stringify(Highscores))
+        document.querySelector("#Initials").value = ""
+
+        HighScoreScreen();
+    }
+}
+
 // TODO functions for each set of buttons/ questions
 function Question1() {
     H1.textContent = "Commonly used data types DO NOT include:";
@@ -124,7 +166,9 @@ function Question1() {
     RenderButtons();
 
     UL.addEventListener("click", function(event) {
+
         if (event.target.id === "C") {
+
             questionnumber += 1
             Right();
             if (questionnumber < 6) {
@@ -134,6 +178,7 @@ function Question1() {
             }
             
         } else {
+
             questionnumber += 1
             Wrong();
             if (questionnumber < 6) {
@@ -206,25 +251,38 @@ function Question5() {
 }
 
 function ScoreScreen() {
-    H1.textContent = "High Score"
-
+    AllDone = true;
     RemoveButtons();
-    UL.parentNode.removeChild(UL)
+    timeDiv.setAttribute("style", "visibility: hidden;");
+    Form.setAttribute("style", "display: flex");
+
+    H1.textContent = "All Done!"
+    P.textContent = "Your final score is:   "
+    Span.textContent = timercount
+
+    ScoreBttn.addEventListener("click", Submit)
+}
+
+function HighScoreScreen() {
+    Form.setAttribute("style", "display: none");
+    UL.setAttribute("style", "display: none")
+
+    
+    H1.textContent = "Highscores"
+    P.textContent = ""
+    Span.textContent = ""
+
+    var StoredHighscores = JSON.parse(localStorage.getItem("Highscores"));
+
+    OL.setAttribute("style", "display: initial")
+    for (var i = 0; i < StoredHighscores.length; i++) {
+        var scores = StoredHighscores[i];
+
+        var li = document.createElement("li");
+        li.innerHTML = scores
+    
+        OL.appendChild(li);
+      }
 }
 
 StartScreen();
-
-
-
-// TODO create questions
-// Questions:
-// 1. Commonly used data types DO NOT include:
-// A. strings, booleans, alerts, numbers
-// 2. The condition in an if/ else statement is enclosed in:
-// A. quotes, curly brackets, parenthesis, square brackets
-// 3. Arrays in Javascript can be used to store:
-// A. numbers and strings, other arrays, booleans, all of the above
-// 4. String valuse must be enclosed with ___ when being assigned to variables: 
-// A.commas, curly brackets, quotes, parenthesis
-// 5. A very useful tool used during development and debugging for printing content to the debugger is: 
-// A. Javascript,  terminal/bash, for loops, console.log
