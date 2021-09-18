@@ -5,10 +5,19 @@ main {
     align-items: center;
 }
 
+#timeDiv {
+    align-self: flex-end;
+    visibility: hidden;
+}
+.timeDiv {
+    display: inline;
+}
+
 h1 {
     padding-top: 50px;
 }
 
-div {
-    display: flex;
+button {
+    background-color: midnightblue;
+    color: white;
 }
