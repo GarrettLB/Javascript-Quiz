@@ -1,4 +1,4 @@
-// VARIABLES/QUERYSELECTORS
+// QUERYSELECTORS
 var H1 = document.querySelector("#H1")
 var P = document.querySelector("#P")
 var UL = document.querySelector("#UL")
@@ -11,43 +11,152 @@ var Span = document.querySelector("#Span")
 var Form = document.querySelector("#Form")
 var ScoreBttn = document.querySelector("#ScoreBttn")
 
+
+// GLOBAL VARIABLES
 var timercount = 75
 var AllDone = false
+var questionnumber = 1
 
+
+// ELEMENTS
 var BttnStrt = document.createElement("button")
-
 var Bttn1 = document.createElement("button")
 var Bttn2 = document.createElement("button")
 var Bttn3 = document.createElement("button")
 var Bttn4 = document.createElement("button")
 
-function DeleteButtons() {
 
-    document.remove(Bttn1)
-    document.remove(Bttn2)
-    document.remove(Bttn3)
-    document.remove(Bttn4)
+// FUNCTIONS
+function Wrong() {  
+
+    H2.textContent = "Wrong!"
+    DisplayTime.style.color = "red"
+    setTimeout(function () {
+        H2.textContent = ""
+        DisplayTime.style.color = "black"
+    }, 500)
+    timercount -= 10
 }
 
-// Start Screen
-function StartScreen() {
+function Right() {
 
-    H1.textContent = "Code Quiz Challenge"
-    P.innerHTML = "Try to answer the following code-related questions within the time limit.<br />Keep in mind that incorrect answers will penelize your score/time by ten seconds."
+    H2.textContent = "Right!"
+    setTimeout(function () {
+        H2.textContent = ""
+    }, 500)
+}
+
+function RenderButtons() {
+
+    UL.appendChild(Bttn1)
+    UL.appendChild(Bttn2)
+    UL.appendChild(Bttn3)
+    UL.appendChild(Bttn4)
+}
+
+function RemoveButtons() {
+
+    Bttn1.parentNode.removeChild(Bttn1)
+    Bttn2.parentNode.removeChild(Bttn2)
+    Bttn3.parentNode.removeChild(Bttn3)
+    Bttn4.parentNode.removeChild(Bttn4)
+}
+
+function removeChildren(parent) {
+    while (parent.firstChild) {
+        parent.removeChild(parent.firstChild);
+    }
+}
+
+function ULEventListener(event) {
+
+    if (event.target.id === "C") {
+
+        questionnumber += 1
+        Right();
+        if (questionnumber < 6) {
+            NextQuestion(questionnumber);
+        } else {
+            ScoreScreen()
+        }
+            
+    } if (event.target.id === "I") {
+
+        questionnumber += 1
+        Wrong();
+        if (questionnumber < 6) {
+            NextQuestion(questionnumber);
+        } else {
+            ScoreScreen()
+        }
+    }
+}
+
+function NextQuestion(number) {
+  
+    if (number == 2) {
+        Question2();
+    }
+    if (number == 3) {
+        Question3();
+    }
+    if (number == 4) {
+        Question4();
+    }
+    if (number == 5) {
+        Question5();
+    }
+}
+
+function OLEventListener(event) {
+
+    if (event.target.id === "clear") {
+        ClearScores()
+    }
+    if (event.target.id === "again") {
+        StartScreen()
+    }
+}
+
+function ClearScores() {
+
+    localStorage.setItem("Highscores", null)
+    HighScoreScreen()
+}
+
+function Submit(event) {
+
+    event.preventDefault();
+
+    var Highscores = JSON.parse(localStorage.getItem("Highscores"));
+
+    if (Highscores === null) {
+        Highscores = []
+    }
+
+    var initials = document.querySelector("#Initials").value;
+    var score = timercount
+
+    var highscore = initials+" - "+score
     
-    BttnStrt.textContent = "Start"
 
-    UL.appendChild(BttnStrt)
+    Highscores.push(highscore)
 
-    BttnStrt.addEventListener("click", function(event) {
-        event.stopPropagation();
-        Quiz();
-    })
+    if (initials.length > 3) {
+        alert("Initials must be three letters max!")
+    }
+    else {
+        localStorage.setItem("Highscores", JSON.stringify(Highscores))
+        document.querySelector("#Initials").value = ""
+
+        HighScoreScreen();
+    }
 }
 
 function Quiz() {
 
-    BttnStrt.parentNode.removeChild(BttnStrt)
+    UL.removeChild(BttnStrt)
+    BttnStrt.removeEventListener("click", Quiz)
     
     timeDiv.setAttribute("style", "visibility: visible;");
 
@@ -68,86 +177,33 @@ function Quiz() {
     Question1();
 }
 
-function Wrong() {  
 
-    H2.textContent = "Wrong!"
-    DisplayTime.style.color = "red"
-    setTimeout(function () {
-        H2.textContent = ""
-        DisplayTime.style.color = "black"
-    }, 500)
-    timercount -= 10
-}
+// SCREENS
+function StartScreen() {
 
-function Right() {
+    timercount = 75
+    AllDone = false
+    questionnumber = 1
+    removeChildren(UL)
+    removeChildren(OL)
+    OL.setAttribute("style", "display: hidden")
+    UL.setAttribute("style", "display: initial")
 
-    H2.textContent = "Right!"
-    setTimeout(function () {
-        H2.textContent = ""
-    }, 500)
-}
+    OL.removeEventListener("click", OLEventListener)
+    Bttn2.removeEventListener("click", StartScreen)
 
-function RemoveButtons() {
-    Bttn1.parentNode.removeChild(Bttn1)
-    Bttn2.parentNode.removeChild(Bttn2)
-    Bttn3.parentNode.removeChild(Bttn3)
-    Bttn4.parentNode.removeChild(Bttn4)
-}
-
-function RenderButtons() {
-    UL.appendChild(Bttn1)
-    UL.appendChild(Bttn2)
-    UL.appendChild(Bttn3)
-    UL.appendChild(Bttn4)
-}
-
-var questionnumber = 1
-function NextQuestion(number) {
-  
-    if (number == 2) {
-        Question2();
-    }
-    if (number == 3) {
-        Question3();
-    }
-    if (number == 4) {
-        Question4();
-    }
-    if (number == 5) {
-        Question5();
-    }
-}
-
-function Submit(event) {
-    event.preventDefault();
-
-    var Highscores = JSON.parse(localStorage.getItem("Highscores"));
-
-    if (Highscores === null) {
-        Highscores = []
-    }
-
-    var initials = document.querySelector("#Initials").value;
-    var score = timercount
-
-    var highscore = initials+" - "+score
+    H1.textContent = "Code Quiz Challenge"
+    P.innerHTML = "Try to answer the following code-related questions within the time limit.<br />Keep in mind that incorrect answers will penelize your score/time by ten seconds."
     
+    BttnStrt.textContent = "Start"
 
-    Highscores.push(highscore)
+    UL.appendChild(BttnStrt)
 
-    if (initials.length > 3) {
-        alert("Initials must be three letters maax!")
-    }
-    else {
-        localStorage.setItem("Highscores", JSON.stringify(Highscores))
-        document.querySelector("#Initials").value = ""
-
-        HighScoreScreen();
-    }
+    BttnStrt.addEventListener("click", Quiz)
 }
 
-// TODO functions for each set of buttons/ questions
 function Question1() {
+
     H1.textContent = "Commonly used data types DO NOT include:";
     P.innerHTML = "";
 
@@ -161,33 +217,9 @@ function Question1() {
     Bttn3.setAttribute("id", "C")
     Bttn4.setAttribute("id", "I")
 
-    console.log(Bttn1.getAttribute("id"))
-
     RenderButtons();
 
-    UL.addEventListener("click", function(event) {
-
-        if (event.target.id === "C") {
-
-            questionnumber += 1
-            Right();
-            if (questionnumber < 6) {
-                NextQuestion(questionnumber);
-            } else {
-                ScoreScreen()
-            }
-            
-        } else {
-
-            questionnumber += 1
-            Wrong();
-            if (questionnumber < 6) {
-                NextQuestion(questionnumber);
-            } else {
-                ScoreScreen()
-            }
-        }
-    })
+    UL.addEventListener("click", ULEventListener)
 }
 
 function Question2() {
@@ -251,7 +283,10 @@ function Question5() {
 }
 
 function ScoreScreen() {
+
     AllDone = true;
+    UL.removeEventListener("click", ULEventListener)
+
     RemoveButtons();
     timeDiv.setAttribute("style", "visibility: hidden;");
     Form.setAttribute("style", "display: flex");
@@ -264,25 +299,41 @@ function ScoreScreen() {
 }
 
 function HighScoreScreen() {
+    removeChildren(OL)
     Form.setAttribute("style", "display: none");
     UL.setAttribute("style", "display: none")
 
     
-    H1.textContent = "Highscores"
+    H1.textContent = "Scores"
     P.textContent = ""
     Span.textContent = ""
 
-    var StoredHighscores = JSON.parse(localStorage.getItem("Highscores"));
+    var Highscores = JSON.parse(localStorage.getItem("Highscores"));
+
+    if (Highscores === null) {
+        Highscores = []
+    }
 
     OL.setAttribute("style", "display: initial")
-    for (var i = 0; i < StoredHighscores.length; i++) {
-        var scores = StoredHighscores[i];
+    for (var i = 0; i < Highscores.length; i++) {
+        var scores = Highscores[i];
 
         var li = document.createElement("li");
         li.innerHTML = scores
     
         OL.appendChild(li);
-      }
+    }
+
+    Bttn1.textContent = "Clear Scores"
+    Bttn2.textContent = "Play again"
+
+    Bttn1.setAttribute("id", "clear")
+    Bttn2.setAttribute("id", "again")
+
+    OL.appendChild(Bttn1)
+    OL.appendChild(Bttn2)
+
+    OL.addEventListener("click", OLEventListener)
 }
 
 StartScreen();
