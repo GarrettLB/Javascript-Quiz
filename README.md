@@ -11,4 +11,4 @@ Your final score is how much time is left on the timer.
 Screenshot:
 
 
-Link:
+Link:https://garrettlb.github.io/Javascript-Quiz/
