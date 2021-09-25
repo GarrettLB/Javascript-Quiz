@@ -27,7 +27,7 @@ var Bttn4 = document.createElement("button")
 
 
 // FUNCTIONS
-function Wrong() {  
+function Wrong() { 
 
     H2.textContent = "Wrong!"
     DisplayTime.style.color = "red"
@@ -78,9 +78,8 @@ function ULEventListener(event) {
             NextQuestion(questionnumber);
         } else {
             ScoreScreen()
-        }
-            
-    } if (event.target.id === "I") {
+        }    
+    } else if (event.target.id === "I") {
 
         questionnumber += 1
         Wrong();
@@ -212,10 +211,10 @@ function Question1() {
     Bttn3.textContent = "3. Alerts";
     Bttn4.textContent = "4. Numbers";
 
-    Bttn1.setAttribute("id", "I")
-    Bttn2.setAttribute("id", "I")
-    Bttn3.setAttribute("id", "C")
-    Bttn4.setAttribute("id", "I")
+    Bttn1.id = 'I'
+    Bttn2.id = 'I'
+    Bttn3.id = 'C'
+    Bttn4.id = 'I'
 
     RenderButtons();
 
@@ -231,10 +230,10 @@ function Question2() {
     Bttn3.textContent = "3. Parenthesis";
     Bttn4.textContent = "4. Square brackets";
 
-    Bttn1.setAttribute("id", "I")
-    Bttn2.setAttribute("id", "I")
-    Bttn3.setAttribute("id", "C")
-    Bttn4.setAttribute("id", "I")
+    Bttn1.id = 'I'
+    Bttn2.id = 'I'
+    Bttn3.id = 'C'
+    Bttn4.id = 'I'
 }
 
 function Question3() {
@@ -245,11 +244,11 @@ function Question3() {
     Bttn2.textContent = "2. Other arrays";
     Bttn3.textContent = "3. Booleans";
     Bttn4.textContent = "4. All of the above";
-
-    Bttn1.setAttribute("id", "I")
-    Bttn2.setAttribute("id", "I")
-    Bttn3.setAttribute("id", "I")
-    Bttn4.setAttribute("id", "C")
+    
+    Bttn1.id = 'I'
+    Bttn2.id = 'I'
+    Bttn3.id = 'I'
+    Bttn4.id = 'C'
 }
 
 function Question4() {
@@ -261,10 +260,10 @@ function Question4() {
     Bttn3.textContent = "3. Quotes";
     Bttn4.textContent = "4. Parenthesis";
 
-    Bttn1.setAttribute("id", "I")
-    Bttn2.setAttribute("id", "I")
-    Bttn3.setAttribute("id", "C")
-    Bttn4.setAttribute("id", "I")
+    Bttn1.id = 'I'
+    Bttn2.id = 'I'
+    Bttn3.id = 'C'
+    Bttn4.id = 'I'
 }
 
 function Question5() {
@@ -276,10 +275,10 @@ function Question5() {
     Bttn3.textContent = "3. For loops";
     Bttn4.textContent = "4. Console.log";
 
-    Bttn1.setAttribute("id", "I")
-    Bttn2.setAttribute("id", "I")
-    Bttn3.setAttribute("id", "I")
-    Bttn4.setAttribute("id", "C")
+    Bttn1.id = 'I'
+    Bttn2.id = 'I'
+    Bttn3.id = 'I'
+    Bttn4.id = 'C'
 }
 
 function ScoreScreen() {
